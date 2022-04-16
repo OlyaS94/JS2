@@ -13,24 +13,7 @@ class Good {
     }    
 }
 
-class GoodsList {
-    constructor(filter, sortPrice, sortDir) {
-        this._goods = []
-        this.filter = filter === undefined ? /./i: filter;
-        this.sortDir = sortDir === undefined ? false: sortDir;
-        this.sortPrice = sortPrice === undefined ? false: sortPrice;
-    _find_index(id) {
-        let index = this._goods.map((e, i) => [i, e]).filter(el => el[1].id === id)[0];
-        if(index === undefined) {
-            return -1;
-        }
-        return index[0];
-    }
 
-    _removeIndexOf(index) {
-        this._goods.splice(index, 1);
-    }
-    
 class BasketGood extends Good {
     constructor(id, name, description, sizes, price, amount) {
         super(id, name, description, sizes, price)
@@ -38,7 +21,30 @@ class BasketGood extends Good {
     }
 }
 
-get list() {
+
+class GoodsList {
+    constructor(filter, sortPrice, sortDir) {
+        this._goods = []
+        this.filter = filter === undefined ? /./i: filter;
+        this.sortDir = sortDir === undefined ? false: sortDir;
+        this.sortPrice = sortPrice === undefined ? false: sortPrice;
+    }
+
+    _find_index(id) {
+        let index = this._goods.findIndex(
+            (element) => element.id === id
+            );
+        if(index === undefined) {
+            return -1;
+        }
+        return index;
+    }
+
+    _removeIndexOf(index) {
+        this._goods.splice(index, 1);
+    }
+
+    get list() {
 
         let result = this._goods.filter(el => this.filter.test(el.name));
         if(!this.sortPrice) {
@@ -56,7 +62,7 @@ get list() {
     }
 
     remove(id) {
-        let index = this._find_index(id);;
+        let index = this._find_index(id);
         if( index === -1) {
             return
         }
@@ -118,7 +124,8 @@ function main() {
         new Good(2, "jeans", "description...", [52,58], 2000, 0),
         new Good(3, "shoes", "description...", [37,39], 3000, 6),
         new Good(4, "top", "description...", [46,48], 1000, 1),
-        new Good(5, "dress", "description...", [44,46], 3000, 0),
+        new Good(5, "dress", "description...", [44,46], 3000, 0)
+        ]
 
     let goodsList = new GoodsList();
 
@@ -130,7 +137,7 @@ function main() {
     goodsList.filter = /a/i;
     console.log("filtered ", goodsList.list);
 
-    goodsList.remove(1);
+    goodsList.remove(33);
     console.log(goodsList.list);
 
     goodsList.filter = /./i;
@@ -152,10 +159,10 @@ function main() {
     basket.add(basketGoods[0], 5);
     console.log(basket.list);
 
-    basket.remove(basketGoods[0], 15)
+    basket.remove(basketGoods[0], 15);
     console.log(basket.list);
 
-    basket.remove(basketGoods[0], 100)
+    basket.remove(basketGoods[0], 100);
     console.log(basket.list);
 
     basket.add(basketGoods[1], 5);
@@ -166,9 +173,8 @@ function main() {
     console.log(basket.list);
 
     basket.add(basketGoods[1], 5);
-    basket.clear()
+    basket.clear();
     console.log(basket.list);
 }
 
 main();
-
